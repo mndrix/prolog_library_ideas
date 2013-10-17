@@ -4,14 +4,6 @@
 
 I want a library which fills the same niche but avoids these shortfalls.  It provides `library(struct/record)` which is a strict superset of `library(record)`.  It does everything that `library(struct)` does but also supports complete backward compatibility with `library(record)`.
 
-## Conventions
-
-In the text below, assume the following type declarations:
-
-```prolog
-has_type(pair, _Key=_Value).
-```
-
 ## Examples
 
 Structured data types are declared exactly like `library(record)` but using the `struct` operator.
