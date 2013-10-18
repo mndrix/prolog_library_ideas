@@ -43,6 +43,13 @@ Thing = mountain(300, _) .
 Mountain = mountain(300, nepal).
 ```
 
+This convention works well with `library(func)` because each property relation can be used as a function:
+
+```prolog
+?- format('The building is ~d meters high~n', [height $ Building]).
+The building is 300 meters high
+```
+
 There's also a semidet, two-arity predicate for each property that just declares the existence of a property on a struct.
 
 ```prolog
