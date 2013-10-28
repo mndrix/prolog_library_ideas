@@ -23,4 +23,4 @@ false.
 true.
 ```
 
-In SWI-Prolog, this can be built on top of `current_prolog_flag(arch, Arch)`.
+In SWI-Prolog, this can be built on top of `current_prolog_flag(arch, Arch)` and `current_prolog_flag(unix, true)` and `current_prolog_flag(apple, true)`.
