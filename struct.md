@@ -87,3 +87,11 @@ taller_than(Short,Tall) :-
 ?- taller_than(building(20,_), mountain(1000,_)).
 true.
 ```
+
+## Default Values
+
+My experience with Go and with `library(record)` suggests that every field in a struct should have a default value.  Make a default value mandatory when creating a new struct type?
+
+I don't like how Go chooses a default value for you ("zero value").  It's sometimes right but not often enough for that to be the stanard behavior.
+
+Before implementing this part of the spec, make sure that I'm not killing some important use case.  In Prolog, it's usually best to leave unspecified values as a variable so that they can unify later to receive their value.
