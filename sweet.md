@@ -19,6 +19,8 @@ foo(x(A,_,C,D)@X) :-
     % use X
 ```
 
+Alan Baljeu [asked for this on the mailing list too](https://lists.iai.uni-bonn.de/pipermail/swi-prolog/2013/012013.html).  He wanted SWI Prolog to add special indexing, but syntactic sugar could accopmlish the same goal without much trouble.
+
 
 ## Ternary Operator
 
