@@ -41,6 +41,28 @@ For compatibility with Ciao, consider using `?` and `|` instead.
 
 This construct is really an expression and in that sense it might fit well with `library(func)` which supports other types of expressions.
 
+## Short-circuting Disjunction
+
+I often find myself writing code like this:
+
+```prolog
+( summary(Entry, Summary) -> true
+; content(Entry, Content), summarize(Content, Summary) -> true
+; Summary=''
+)
+```
+
+Namely, trying several alternatives to bind a variable and committing to the first one that succeeds.  I'd rather write something like:
+
+```prolog
+(  summary(Entry, Summary)
+or ( content(Entry, Content), summarize(Content, Summary) )
+or Summary=''
+).
+```
+
+As best I can tell, the only widely accepted notation for short-circuiting disjunction is `||`, but that's an invalid operator in Prolog.
+
 ## Lexically Scoped Cleanup
 
 One sometimes wants to acquire a resource (create a temporary file, set a flag, etc) and have that resource automatically released when a clause finishes.  Prolog provides `setup_call_cleanup/3` to help, but it has the following problems:
