@@ -1,4 +1,4 @@
-# Syntactic Sweetner
+# Syntactic Sweetener
 
 Some syntactic sugar ideas are so small that they don’t really justify a library of their own. It’s probably best to roll them all into `library(sweet)` which I can use across projects.  It’d be great if `library(sweet)` re-exported the behavior of `library(func)`.
 
