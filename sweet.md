@@ -43,7 +43,7 @@ This construct is really an expression and in that sense it might fit well with 
 
 ## Short-circuting Disjunction
 
-I often find myself writing code like this:
+Even though it's no longer needed, I'm retaining this section to remind myself.  It should have been obvious that short-circuiting disjunction doesn't need any sugar.  This
 
 ```prolog
 ( summary(Entry, Summary) -> true
@@ -52,16 +52,14 @@ I often find myself writing code like this:
 )
 ```
 
-Namely, trying several alternatives to bind a variable and committing to the first one that succeeds.  I'd rather write something like:
+just becomes this
 
 ```prolog
-(  summary(Entry, Summary)
-or ( content(Entry, Content), summarize(Content, Summary) )
-or Summary=''
-).
+once(  summary(Entry, Summary)
+    ;  ( content(Entry, Content), summarize(Content, Summary) )
+    ;  Summary=''
+    ).
 ```
-
-As best I can tell, the only widely accepted notation for short-circuiting disjunction is `||`, but that's an invalid operator in Prolog.
 
 ## Lexically Scoped Cleanup
 
