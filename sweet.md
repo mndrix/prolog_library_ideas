@@ -119,6 +119,6 @@ Make `otherwise/0` an alias for `true/0`.  It reads nicely in lengthy if-then-el
 
 ## Todo
 
-`todo/0` and `todo/1` are helpful ways to mark a piece of code as not yet finished.  Inspired by Perl 6’s `…` operator and all the times I write `fail, % TODO` in Prolog.
+`todo/0` and `todo/1` are helpful ways to mark a piece of code as not yet finished.  Inspired by Perl 6’s `…` operator and all the times I write `fail, % TODO` in Prolog.  Scala calls this `???`.
 
-It behaves just like `fail/0`.  In development mode, it calls `print_message/2` first.  `todo/1` lets the user specify a reason why the code is left undone.
+Executing it throws an exception.  In development mode this gives you a nice stack trace that you can use to understand the goal's context.  In production the exception catches your attention quickly so you know that you forgot to implement something.  I decided that an exception is better than failure because the former is easier to debug.  We don't want anything silent here.
