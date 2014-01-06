@@ -136,7 +136,7 @@ X = 2 .
 ?- howdy in greetings{hello:english, howdy:southern}.
 true.
 
-?- foreach(X in [1,2,3], writeln(hi).
+?- foreach(X in [1,2,3], writeln(hi)).
 hi
 hi
 hi
@@ -146,3 +146,19 @@ true.
 `in(?X, +Xs)` should call a multifile predicate `sweetner:has_member(+Xs, ?X)`.  Container libraries like assoc, ordsets, rbtree, etc. can add clauses to define what containment means.
 
 Which semantics do we want: iterate all members, quit on the first match?  In other words, which is used more often: `member/2`, `memberchk/2`?  For some libraries (e.g., ordsets), the distinction is irrelevant because duplicate members are impossible.  Maybe iteration semantics is best since `once(X in Xs)` is clear and keeps membership separate from determinism.  If that becomes a common pattern, I can always have a macro that expands that construct into something more efficient that doesn't create choicepoints just to discard them right away.
+
+Make sure that libraries can change their iteration behavior based on the placeholder term.  For example, iterating pairs seems natural:
+
+```prolog
+?- Key-Value in Assoc.
+Key = a,
+Value = 1 ;
+Key = b,
+Value = 2 .
+
+?- Index-Value in [a,b].
+Index = 1,
+Value = a ;
+Index = 2,
+Value = b .
+```
