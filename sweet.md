@@ -122,3 +122,27 @@ Make `otherwise/0` an alias for `true/0`.  It reads nicely in lengthy if-then-el
 `todo/0` and `todo/1` are helpful ways to mark a piece of code as not yet finished.  Inspired by Perl 6’s `…` operator and all the times I write `fail, % TODO` in Prolog.  Scala calls this `???`.
 
 Executing it throws an exception.  In development mode this gives you a nice stack trace that you can use to understand the goal's context.  In production the exception catches your attention quickly so you know that you forgot to implement something.  I decided that an exception is better than failure because the former is easier to debug.  We don't want anything silent here.
+
+
+## Membership
+
+Declaring membership in a collection is a  common operation.  Witness how often one calls `member/2` or `memberchk/2`.  It might be nice if this operation were generalized and shortened.  The obvious candidate is an `in` operator like JavaScript, Python and C#.
+
+```prolog
+?- X in [1,2].
+X = 1 ;
+X = 2 .
+
+?- howdy in greetings{hello:english, howdy:southern}.
+true.
+
+?- foreach(X in [1,2,3], writeln(hi).
+hi
+hi
+hi
+true.
+```
+
+`in(?X, +Xs)` should call a multifile predicate `sweetner:has_member(+Xs, ?X)`.  Container libraries like assoc, ordsets, rbtree, etc. can add clauses to define what containment means.
+
+Which semantics do we want: iterate all members, quit on the first match?  In other words, which is used more often: `member/2`, `memberchk/2`?  For some libraries (e.g., ordsets), the distinction is irrelevant because duplicate members are impossible.  Maybe iteration semantics is best since `once(X in Xs)` is clear and keeps membership separate from determinism.  If that becomes a common pattern, I can always have a macro that expands that construct into something more efficient that doesn't create choicepoints just to discard them right away.
