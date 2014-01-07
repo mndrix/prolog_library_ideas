@@ -24,10 +24,10 @@ Alan Baljeu [asked for this on the mailing list too](https://lists.iai.uni-bonn.
 
 ## Ternary Operator
 
-Just like the one in C-descended languages.  Convert this
+Similar to the one in C-descended languages.  Syntax here borrowed from [Ciao](http://ciao-lang.org/docs/1.14/13646/CiaoDE-1.14.2-13646_ciao.html/fsyntax_doc.html). Convert this
 
 ```prolog
-X = thing ? foo : bar.
+X = thing ? foo | bar.
 ```
 
 into
@@ -37,7 +37,14 @@ into
 X = A.
 ```
 
-For compatibility with Ciao, consider using `?` and `|` instead.
+Be sure that cascaded ternary expressions are supported:
+
+```prolog
+fact(N, F) :-
+   F = ( N = 0 ? 1
+       | N > 0 ? N * fact(~ is N-1,~)
+       ).
+```
 
 This construct is really an expression and in that sense it might fit well with `library(func)` which supports other types of expressions.
 
