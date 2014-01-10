@@ -93,19 +93,28 @@ with this
 ```prolog
 foo :-
     tmp_file(Tmp),
-    defer(rm(Tmp)),
+    cleanup(rm(Tmp)),
     bar(Tmp),
     baz(Tmp).
 ```
 
-A `term_expansion/2` macro would expand the latter into the former.  One should be able to call `defer/1` multiple times within a clause and have it work as if one called `defer((ignore(Goal1),ignore(Goal2))`.
-
-Prolog flags, because they are global state, should be managed automatically.  This suggests a predicate `defer_flag(+Key, +NewValue)` which desugars into
+A `term_expansion/2` macro would expand the latter into the former.  One should be able to call `cleanup/1` multiple times within a clause and have it work correctly.  The macro expansion should behave as if the following worked:
 
 ```prolog
-current_prolog_flag(Key, OldValue),
-set_prolog_flag(Key, NewValue),
-defer(set_prolog_flag(Key, OldValue)),
+term_expansion(
+    (Head :- Setup, cleanup(Cleanup), Call),
+    (Head :- setup_call_cleanup(Setup, Call, Cleanup))
+).
+```
+
+With recursive expansion inside `Call`.
+
+Prolog flags, because they are global state, should be managed automatically.  This suggests a predicate `cleanup_flag(+Flag, +NewValue)` which desugars into
+
+```prolog
+current_prolog_flag(Flag, OldValue),
+set_prolog_flag(Flag, NewValue),
+cleanup(set_prolog_flag(Flag, OldValue)),
 ```
 
 
