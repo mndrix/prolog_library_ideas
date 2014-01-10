@@ -80,11 +80,12 @@ I want something more like Go’s `defer` or Perl’s `Scope::Guard`, which keep
 
 ```prolog
 foo :-
-    call_cleanup( ( tmp_file(Tmp)
-                  , bar(Tmp)
-                  , baz(Tmp)
-                  )
-                , rm(Tmp)
+    setup_call_cleanup(
+        tmp_file(Tmp),
+        ( bar(Tmp)
+        , baz(Tmp)
+        ),
+        rm(Tmp)
      ).
 ```
 
