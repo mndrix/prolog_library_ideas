@@ -48,26 +48,6 @@ fact(N, F) :-
 
 This construct is really an expression and in that sense it might fit well with `library(func)` which supports other types of expressions.
 
-## Short-circuting Disjunction
-
-Even though it's no longer needed, I'm retaining this section to remind myself.  It should have been obvious that short-circuiting disjunction doesn't need any sugar.  This
-
-```prolog
-( summary(Entry, Summary) -> true
-; content(Entry, Content), summarize(Content, Summary) -> true
-; Summary=''
-)
-```
-
-just becomes this
-
-```prolog
-once(  summary(Entry, Summary)
-    ;  ( content(Entry, Content), summarize(Content, Summary) )
-    ;  Summary=''
-    ).
-```
-
 ## Lexically Scoped Cleanup
 
 One sometimes wants to acquire a resource (create a temporary file, set a flag, etc) and have that resource automatically released when a clause finishes.  Prolog provides `setup_call_cleanup/3` to help, but it has the following problems:
@@ -178,4 +158,28 @@ Index = 1,
 Value = a ;
 Index = 2,
 Value = b .
+```
+
+## Deprecated
+
+No longer part of the plan, but retained to help my memory.
+
+### Short-circuting Disjunction
+
+Even though it's no longer needed, I'm retaining this section to remind myself.  It should have been obvious that short-circuiting disjunction doesn't need any sugar.  This
+
+```prolog
+( summary(Entry, Summary) -> true
+; content(Entry, Content), summarize(Content, Summary) -> true
+; Summary=''
+)
+```
+
+just becomes this
+
+```prolog
+once(  summary(Entry, Summary)
+    ;  ( content(Entry, Content), summarize(Content, Summary) )
+    ;  Summary=''
+    ).
 ```
