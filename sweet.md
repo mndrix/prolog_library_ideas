@@ -160,6 +160,43 @@ Index = 2,
 Value = b .
 ```
 
+## Modules
+
+### Syntax
+
+The standard syntax for importing modules is verbose and repetitive:
+
+```prolog
+:- use_module(library(foo), [predicate/3]).
+```
+
+I'd like something shorter:
+
+```prolog
+use foo, [predicate/3].
+```
+
+I'd also like to be able to add and remove name prefixes from predicates:
+
+```prolog
+use uri, drop_prefix(uri_), [uri_is_global/1, uri_encoded/3].
+% imports is_global/1 and encoded/3
+
+use foo, add_prefix(foo_), [hi/1, bye/2].
+% imports foo_hi/1 and foo_bye/2
+```
+
+### Semantics
+
+The current `use_module` systems allows a module to export predicates and operators.  I'd also like them to be able to export clauses (similar to multifile predicates) and perform arbitrary computations (change import paths, modify Prolog flags, etc).  I believe that all these goals can be realized by having `use foo, Args` behave as if it were
+
+```prolog
+:- load_files(library(func), [expand(true), if(not_loaded)]),
+   func:export_to(CallingModule, Args).
+```
+
+(load module, transfer control to a predicate in the newly loaded module).  If the module doesn't implement `export_to/2`, we call a default implementation.  Otherwise, the module can do whatever it wants.  The default should work with all existing modules so that we don't lose access to all that code.
+
 ## Deprecated
 
 No longer part of the plan, but retained to help my memory.
