@@ -113,6 +113,19 @@ Make `otherwise/0` an alias for `true/0`.  It reads nicely in lengthy if-then-el
 ).
 ```
 
+## Conditional Evaluation
+
+I often write
+
+```prolog
+( Condition -> Goal ; true ).
+```
+
+maybe sugar it as
+
+```prolog
+if(Condition, Goal).
+```
 
 ## Todo
 
