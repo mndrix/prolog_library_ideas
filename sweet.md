@@ -210,6 +210,25 @@ The current `use_module` systems allows a module to export predicates and operat
 
 (load module, transfer control to a predicate in the newly loaded module).  If the module doesn't implement `export_to/2`, we call a default implementation.  Otherwise, the module can do whatever it wants.  The default should work with all existing modules so that we don't lose access to all that code.
 
+## All Solutions
+
+It's quite common to find all solutions for a predicate that has only one "output".  The standard code is quite verbose, with variables floating around all over the place.  Perhaps we have something like this:
+
+```prolog
+all(foo, set(Foos)).
+```
+
+which is equivalent to
+
+```prolog
+all(Goal, Results) :-
+  all_(Results, Goal).
+all_(set(Results), Goal) :-
+    setof(X, call(Goal, X), Results).
+all_(bag(Results), Goal) :-
+    bagof(X, call(Goal, X), Results).
+```
+
 ## Deprecated
 
 No longer part of the plan, but retained to help my memory.
