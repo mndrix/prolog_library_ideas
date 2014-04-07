@@ -98,6 +98,29 @@ set_prolog_flag(Flag, NewValue),
 cleanup(set_prolog_flag(Flag, OldValue)),
 ```
 
+### Prior Art
+
+Jeff Rosewald, in `library(tipc)`, uses this:
+
+```prolog
+eventually_implies(P, Q) :-
+      setup_call_cleanup(P, (Foo = true; Foo = false), assertion(Q)),
+      Foo == true.
+
+:- op(950, xfy, ~>).
+
+~>(P, Q) :- eventually_implies(P, Q).
+```
+
+so, you can write code like this
+
+```prolog
+open(Something, read, In) ~> close(In),
+do whatever you like,
+!.  % cut reclaims resources
+```
+
+The syntax is really nice, but I don't like the way it uses cut.  I'm also hesitant to use a nice operator like `~>` for smoething that's done relatively rarely.
 
 ## Otherwise
 
