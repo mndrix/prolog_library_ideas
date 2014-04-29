@@ -112,3 +112,9 @@ header_value(_, Raw, raw(Raw)).
 ```
 
 Or maybe the backtracking on these hooks generates multiple values for a given key in the `Header` part of the request.  A consumer can say `get_header(foo, Val), float(Val)` to indicate that they want a floating point representation of that header.
+
+## Routing
+
+An essential part of web service programming is routing inbound requests to the piece of code that should handle that request.  Comments above hint at this idea but I need to specify it in more detail.  Fundamentally, this is a predicate mapping a request value to a closure handling that request.
+
+Consider ideas from `pack(arouter)` which addresses this same problem.
