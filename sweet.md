@@ -203,24 +203,26 @@ Value = b .
 The standard syntax for importing modules is verbose and repetitive:
 
 ```prolog
-:- use_module(library(foo), [predicate/3]).
+:- use_module(library(foo), [bar/3, baz/3]).
 ```
 
 I'd like something shorter:
 
 ```prolog
-use foo, [predicate/3].
+use foo -> bar/3, baz/3.
 ```
 
 I'd also like to be able to add and remove name prefixes from predicates:
 
 ```prolog
-use uri, drop_prefix(uri_), [uri_is_global/1, uri_encoded/3].
+use uri -> uri_is_global/1, uri_encoded/3, without_prefix(uri_).
 % imports is_global/1 and encoded/3
 
-use foo, add_prefix(foo_), [hi/1, bye/2].
+use foo -> hi/1, bye/2, with_prefix(foo_).
 % imports foo_hi/1 and foo_bye/2
 ```
+
+These are strict syntactic changes which can be implemented with a small term_expansion/2 macro.
 
 ### Semantics
 
