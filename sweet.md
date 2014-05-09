@@ -209,16 +209,16 @@ The standard syntax for importing modules is verbose and repetitive:
 I'd like something shorter:
 
 ```prolog
-use foo -> bar/3, baz/3.
+:- use foo -> bar/3, baz/3.
 ```
 
 I'd also like to be able to add and remove name prefixes from predicates:
 
 ```prolog
-use uri -> uri_is_global/1, uri_encoded/3, without_prefix(uri_).
+:- use uri -> uri_is_global/1, uri_encoded/3, without_prefix(uri_).
 % imports is_global/1 and encoded/3
 
-use foo -> hi/1, bye/2, with_prefix(foo_).
+:- use foo -> hi/1, bye/2, with_prefix(foo_).
 % imports foo_hi/1 and foo_bye/2
 ```
 
