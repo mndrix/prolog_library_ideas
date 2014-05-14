@@ -14,3 +14,7 @@ One of the key design goals is to allow libraries to extend this operator to do 
   * `X ~~ Assoc` becomes `get_assoc(X, Assoc, _)`
   * `X ~~ [Key=Value|Pairs]` becomes `memberchk(X=_,[...])`
   * `X ~~ type(Type)` becomes `error:has_type(Type, X)`
+
+The Perl community has learned [many valuable lessons](http://markmail.org/message/u22titrq5ljclz4b) about this operator in the 4 years since they implemented it.  Read that thread for the problems and a thorough discussion of how they plan to resolve them.  Summary: the default smartmatch table needs to have only 4-5 entries, with a clear extension mechanism.
+
+We don't want too much DWIM.  Some of these problems are solved because Prolog is strongly typed.
