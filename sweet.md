@@ -215,10 +215,10 @@ I'd like something shorter:
 I'd also like to be able to add and remove name prefixes from predicates:
 
 ```prolog
-:- use uri -> uri_is_global/1, uri_encoded/3, without_prefix(uri_).
+:- use uri, rm_prefix(uri_) -> uri_is_global/1, uri_encoded/3.
 % imports is_global/1 and encoded/3
 
-:- use foo -> hi/1, bye/2, with_prefix(foo_).
+:- use foo, add_prefix(foo_) -> hi/1, bye/2.
 % imports foo_hi/1 and foo_bye/2
 
 :- use julian -> form_time/{1,2}.
