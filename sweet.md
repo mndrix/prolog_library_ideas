@@ -220,6 +220,9 @@ I'd also like to be able to add and remove name prefixes from predicates:
 
 :- use foo -> hi/1, bye/2, with_prefix(foo_).
 % imports foo_hi/1 and foo_bye/2
+
+:- use julian -> form_time/{1,2}.
+% imports form_time/1 and form_time/2.
 ```
 
 These are strict syntactic changes which can be implemented with a small term_expansion/2 macro.
