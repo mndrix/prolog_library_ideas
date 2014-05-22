@@ -44,3 +44,19 @@ The developer probably intended:
 N = 3,
 forall( between(1,7,I), writeln(I) )
 ```
+
+### `bagof/3` and ^ variables
+
+If `bagof/3` or `setof/3` has a second argument describing free variables (with `^/2`) each of those free variables must appear somewhere inside the goal:
+
+```prolog
+X = hi,
+bagof(Y, X^foo(Z,Y), Ys)
+```
+
+The developer probably intended:
+
+```prolog
+X = hi,
+bagof(Y,Z^foo(Z,Y), Ys)
+```
