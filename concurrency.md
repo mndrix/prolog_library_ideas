@@ -1,4 +1,4 @@
-I’m leaning towards calling this `library(concur)`.  The name is short, it suggests concurrent computation and suggests a more limited scope than the name “futures” does.
+I’m leaning towards calling this `library(concur)`.  The name is short, it suggests concurrent computation and suggests a more limited scope than the name “futures” does.  Although "concur" means agree, which could be confusing.  Maybe choose a random noun as the name and be done with it.  Dr. Suess is always good for inspiration.
 
 # Explicit Concurrency
 
@@ -8,13 +8,13 @@ SWI Prolog [message queues](http://www.swi-prolog.org/pldoc/man?section=threadco
 main(Url) :-
     async(http_get(Url,Html), Ch),
     do_some_stuff,
-    wait(Ch),  % binds Html when it's ready
+    await(Ch),  % binds Html when it's ready
     use_it(Html).
 ```
 
-Calling `async(:Goal,-Channel)` creates a message queue, captures all unbound variables in `Goal` and starts seeking `Goal` in a separate thread (or thread pool).  `wait(+Channel)` blocks until `Goal` has produces a solution; backtracking iterates solutions.  `wait/1` communicates solutions to its caller by binding the formerly unbound variables in `Goal`.
+Calling `async(:Goal,-Token)` creates a message queue, captures all unbound variables in `Goal` and starts seeking `Goal` in a separate thread (or thread pool).  `await(+Token)` blocks until `Goal` has produces a solution; backtracking iterates solutions.  `await/1` communicates solutions to its caller by binding the formerly unbound variables in `Goal`.
 
-When the thread finds a solution, it wraps it in `fail/0`, `solution/1` or `final/1` to indicate failure, one solution out of several to come, or the final solution (respectively).  This allows `wait/1` to create choicepoints so it can iterate all solutions.
+When the thread finds a solution, it wraps it in `fail/0`, `solution/1` or `final/1` to indicate failure, one solution out of several to come, or the final solution (respectively).  This allows `await/1` to create choicepoints so it can iterate all solutions.
 
 # Futures
 
@@ -35,15 +35,15 @@ into this
 main(Url) :-
     async( http_get(Url, Html), Ch ),
     do_some_stuff,
-    wait(Ch),
+    await(Ch),
     use_it(Html).
 ```
 
-The macro places `wait/1` as late as possible while still happening before the first use of a variable from the goal.
+The macro places `await/1` as late as possible while still happening before the first use of a variable from the goal.
 
-A main goal of parallel futures is to allow futures to behave exactly like normal variables so that parallel computation is transparent.  Unfortunately, the macro approach described above doesn’t allow a predicate to return a future.  In that case, we’d have to insert `wait/1` as the last goal in a clause to convert a future back into a regular value before returning.  That misses opportunities for parallelism since the caller may not need those results immediately.
+A main goal of parallel futures is to allow futures to behave exactly like normal variables so that parallel computation is transparent.  Unfortunately, the macro approach described above doesn’t allow a predicate to return a future.  In that case, we’d have to insert `await/1` as the last goal in a clause to convert a future back into a regular value before returning.  That misses opportunities for parallelism since the caller may not need those results immediately.
 
-Coroutines via `freeze/2` are almost ideal to work around this, but they only work when the future faces unification.  Arithmetic, output and many other predicates fail when working with attributed variables because they look like variables until after unification.  For example, we’d like `X is 1 + Future` to block until the value of Future is available, but it doesn’t.  It only behaves correctly for things like `Future=stuff`.  Consider an option (see below) that makes `wait/1` create a coroutine instead of blocking.  When creating coroutines, be careful to handle backtracking and multiple solutions correctly.  Coroutines are clearly a niche optimization which should only be implemented later.
+Coroutines via `freeze/2` are almost ideal to work around this, but they only work when the future faces unification.  Arithmetic, output and many other predicates fail when working with attributed variables because they look like variables until after unification.  For example, we’d like `X is 1 + Future` to block until the value of Future is available, but it doesn’t.  It only behaves correctly for things like `Future=stuff`.  Consider an option (see below) that makes `await/1` create a coroutine instead of blocking.  When creating coroutines, be careful to handle backtracking and multiple solutions correctly.  Coroutines are clearly a niche optimization which should only be implemented later.
 
 ## Thread Policy
 
