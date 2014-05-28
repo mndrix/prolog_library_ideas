@@ -47,6 +47,8 @@ forall( between(1,7,I), writeln(I) )
 
 ### `bagof/3` and ^ variables
 
+#### Free variables must exist inside
+
 If `bagof/3` or `setof/3` has a second argument describing free variables (with `^/2`) each of those free variables must appear somewhere inside the goal:
 
 ```prolog
@@ -60,3 +62,23 @@ The developer probably intended:
 X = hi,
 bagof(Y,Z^foo(Z,Y), Ys)
 ```
+
+#### Non-escaping variables must be declared
+
+If `bagof/3` or `setof/3` have variables that are used in the second argument, not mentioned in the first argument and not mentioned outside the goal, those variables must be declared as free variables using `^/2`:
+
+```prolog
+Start = 1,
+End = 7,
+bagof(Ls,(mature_loans_by_day_cache(Dt,Ls),Start=<Dt,Dt<End),ByDay)
+```
+
+should have been
+
+```prolog
+Start = 1,
+End = 7,
+bagof(Ls,Dt^(mature_loans_by_day_cache(Dt,Ls),Start=<Dt,Dt<End),ByDay)
+```
+
+Take the set of variables used inside the second argument.  Subtract those declared free.  Subtract those used in the first argument.  Subtract those used outside `bagof/3`.  This set should be empty.  If not, warn the user.
