@@ -3,6 +3,8 @@
 Create a library with efficient implementations for many summary statistics.  I've written each of these more times than I care to remember.  Possible statistics are:
 
   * mean
+  * geometric mean
+  * harmonic mean
   * median (2-quantiles)
   * deciles (10-quantiles)
   * standard deviation
