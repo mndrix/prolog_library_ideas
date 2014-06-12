@@ -14,6 +14,12 @@ get(Mech, Url, json(ParsedJson)),
 
 The browser object should be able to handle HTTP caching based on HTTP headers.  One should also be able to provide a predicate which determines caching policy based on a URL, the previous response headers, the last cache update time and the last cached value.
 
+## SSL Certificates
+
+I routinely encounter websites with valid SSL certificates which have failed to correctly install their intermediate certificates.  SWI Prolog's SSL library also has a hard time finding the system's SSL certs in certain circumstances.  In a couple applications, I've started creating my own SSL certificate bundle that starts with Mozilla's bundle and adds in a bunch of valid, intermediate certificates from popular providers.  This reduces the number of invalid certificate errors.  Perhaps an HTTP client library could use a bundle like this as the default.
+
+Users can still opt for using the system certificates or supplying their own certificates, if they want.
+
 ## Curl Bindings
 
 A high-level browser module needs a good, low-level network protocol module beneath it.  [libcurl](http://curl.haxx.se/libcurl/c/) seems to be the best known to man.  Build a library with thin bindings on top of the `libcurl` API.  Build pleasant, high-level APIs on top of this low-level API.
