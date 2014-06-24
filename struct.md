@@ -123,3 +123,46 @@ Thing = particle(_).
 `flavor/3` needs an extra argument because `Flavor` could reasonably contain a `:/2` term.  However, `flavor/1` can get by because a struct will never have `:` as its name.  Unfortunately, that notation for `flavor/1` makes it look like we're describing the type of `Thing` rather than the type of its field.
 
 I need to think about this some more.  Although, perhaps in the real world it's so rare for a field to have the same name and different types and be involved in the same program that it's not worth special treatment.  It's easy enough to follow `flavor/2` with a type check, that that probably suffices.
+
+## Mapping, Folding and DCGs
+
+I've encountered some circumstances where it would be helpful to transform one struct into another via a predicate `map_struct/3`.  Imagine a struct representing a person.  If she marries, her name and marital status both change.  Instead of doing:
+
+```prolog
+marriage(Woman0,HusbandName,Woman) :-
+    surname(Woman0,_MaidenName,jones,Woman1),
+    marital_status(Woman1,single,married,Woman).
+```
+
+we might want something like:
+
+```prolog
+marriage(Woman0,HusbandName,Woman) :-
+    map_struct(marry(HusbandName), Woman0, Woman).
+
+marry(HusbandSurname,surname,_MaidenName,HusbandSurname).
+marry(_HusbandSurname,marital_status,single,married).
+```
+
+If the higher-order predicate fails, it leaves that field's original value in place.
+
+If I changed the argument order on `Property/4` to `foo(OldValue,NewValue,OldStruct,NewStruct)` we could also do something like:
+
+```
+marriage(Woman0,HusbandName,Woman) :-
+    foldl( call
+         , [ surname(_,HusbandName)
+           , marital_status(single,married)
+           ]
+         , Woman0
+         , Woman
+         ).
+```
+
+or using a DCG with adjusted argument order:
+
+```
+marriage(HusbandName) -->
+    surname(_,HusbandName),
+    marital_status(single,married).
+```
