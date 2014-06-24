@@ -29,7 +29,7 @@ Type = mountain .
 Type = mountain.
 ```
 
-There's probably also a `struct/2` which is `struct/3` with `[]` as the final argument.  It describes default structs.  Or maybe `struct/2` is reserved for `struct(Struct, Dict)` for converting between structures and built in dicts.
+There's probably also a `struct/2` which is `struct/3` with `[]` as the final argument.  It describes default structs.  There's also a `struct_dict(Struct, Dict)` for converting between structures and built in dicts.
 
 Each property has a predicate describing the relationship between a property's value and a struct containing that property.
 
