@@ -166,3 +166,37 @@ marriage(HusbandName) -->
     surname(_,HusbandName),
     marital_status(single,married).
 ```
+
+## Reflection
+
+Each struct is identified by a unique name.  We don't allow structs with the same name and different arity because that makes it difficult for structs to acquire new fields later.  We have the following predicates for reflecting on currently defined structs:
+
+```prolog
+%% current_struct(+Name) is semidet.
+%% current_struct(-Name) is nondet.
+%
+%  True if a struct with Name has been defined.  Used for iterating and testing the existence
+%  of structs.
+
+%% struct_property(?Name, ?Property).
+%
+% True when Name refers to a struct with property Property.  Name can also be a struct value, in which
+% case that term's functor is used as the name.
+%
+% Property is one of:
+%
+%   * field(Field)
+%     True if the struct has a field named Field.
+%   * field_type(Field,Type)
+%     True if the struct has a field named Field whose type is Type.  If the field
+%     has no explicit type, it's given as =|any|=.
+%   * field_default(Field, Default)
+%     True if the struct has a field named Field whose default value is Default.
+%     If the field has no explicit default, this property fails.
+```
+
+## Visibility
+
+library(record) creates terms and predicates that are visible only within a specific module.  The arrangement described above assumes that structs are globally visible.  Is global visibility really what we want?  I can see benefits of creating both public and private structs.  Implementing private structs, given the UI and behavior I want, seems quite complicated.  I'm also not sure if I want the verbosity of having users choose visibility when they declare the struct.  That path leads to Java's "public static void ..." keyword soup.
+
+I need to think about this some more.  In general, local declarations are much better than global ones.
