@@ -131,48 +131,60 @@ Thing = particle(_).
 
 I need to think about this some more.  Although, perhaps in the real world it's so rare for a field to have the same name and different types and be involved in the same program that it's not worth special treatment.  It's easy enough to follow `flavor/2` with a type check, that that probably suffices.
 
-## Mapping, Folding and DCGs
+## Argument Order
 
-I've encountered some circumstances where it would be helpful to transform one struct into another via a predicate `map_struct/3`.  Imagine a struct representing a person.  If she marries, her name and marital status both change.  Instead of doing:
+In the example above, I used an argument order for `Property/2` and `Property/4` predicates that's based on a naive reading of [Coding guidelines for Prolog](http://www.ai.uga.edu/mc/plcoding.pdf).  Specifically, §5.2 recommends, "inputs before outputs".  The words "inputs" and "outputs" make sense for unidirectional predicates, but lose meaning for purely relational predicates which operate in multiple modes.  For example, `height/2` works as `height(+,-)` and `height(-,+)`.  Whis argument is the input and output?
+
+In this case, we need to use a different criteria for deciding argument order.  Let's consider the different ways in which these property predicates will be used.
+
+### As Goals
+
+The most obvious use case is predicates as plain goals.  In this case, the argument order is largely irrelevant.  It should conform with user expectations, but those expectations largely depend on how the user applies these relations to their problem. It doesn't give us any guidance.
+
+### In maplist
+
+For uses like `maplist(height,Structs,Heights)` the argument order is irrelevant; the user can just swap maplist's arguments to do what he wants.  For `maplist(height(20),Structs)`, declaring that all `Structs` have a height of 20, we'd want the property value to come first.  For uses like `maplist(height(20,40),Structs0,Structs)` it seems more likely that a user will want to pass property values to the closure rather than passing structs to the closure.
+
+This suggests that property value arguments should come before struct value arguments for `Property/2`, `Property/3` and `Property/4`.
+
+### In foldl
+
+The only use case I can think of is performing multiple modifications on a single struct.
 
 ```prolog
-marriage(Woman0,HusbandName,Woman) :-
-    surname(Woman0,_MaidenName,jones,Woman1),
-    marital_status(Woman1,single,married,Woman).
+foldl( call, [height(20),country(algeria)], Mountain0, Mountain ).
 ```
 
-we might want something like:
+This suggests that property value arguments should come before struct value arguments for `Property/3` and `Property/4`. It offers no guidance for `Property/2`.
+
+### In func application or composition
+
+We have several uses cases:
 
 ```prolog
-marriage(Woman0,HusbandName,Woman) :-
-    map_struct(marry(HusbandName), Woman0, Woman).
-
-marry(HusbandSurname,surname,_MaidenName,HusbandSurname).
-marry(_HusbandSurname,marital_status,single,married).
+?- writeln(height $ Struct).
+?- writeln(height(40) $ Struct).
+?- writeln(height(20,40) $ Struct).
+?- F = magnitude of height.
+?- Marry = marital_status(single,married) of surname(HusbandName).
 ```
 
-If the higher-order predicate fails, it leaves that field's original value in place.
+This suggests the struct argument should come before the property value argument for `Property/2`.  It suggests the reverse order for `Property/3` and `Property/4`.
 
-If I changed the argument order on `Property/4` to `foo(OldValue,NewValue,OldStruct,NewStruct)` we could also do something like:
+### In DCGs
 
-```
-marriage(Woman0,HusbandName,Woman) :-
-    foldl( call
-         , [ surname(_,HusbandName)
-           , marital_status(single,married)
-           ]
-         , Woman0
-         , Woman
-         ).
+```prolog
+foo -->
+    height(20),
+    weight(70).
+? foo(Struct0, Struct).  % set height to 20 and weight to 70
 ```
 
-or using a DCG with adjusted argument order:
+DCGs give a convenient syntax for performing a series of modifications on a struct.  This suggests that value argument should precede the struct argument for `Property/3` and `Property/4`.  It gives no guidance for `Property/2` which has too few arguments to be used meaningfully in a DCG.
 
-```
-marriage(HusbandName) -->
-    surname(_,HusbandName),
-    marital_status(single,married).
-```
+### Conclusion
+
+For `Property/3` and `Property/4`, it seems obvious that placing the value arguments before the struct arguments is the most useful across use cases.  For `Property/2` it's less conclusive, but I suspect that having the struct first will accommodate the more common use case (func application/composition).  That leaves the less common maplist use case to be handled with library(lambda) or a forall/3 goal.
 
 ## Reflection
 
