@@ -69,16 +69,16 @@ Struct = mountain(_,_).
 One changes properties with `Property/4` or `property/5`
 
 ```prolog
-?- height(building(300,E),300,500,Building).
+?- height(300,500,building(300,E),Building).
 Building = building(500, E).
-?- property(mountain(N,pakistan), pakistan, location, india, Mountain).
+?- property(location, pakistan, india, mountain(N,pakistan), Mountain).
 Mountain = mountain(N,india).
 ```
 
 There's also `Property/3` which is a shortcut for `Property/4` where the "old" value is ignored.
 
 ```prolog
-?- height(building(300,E),500,Building).
+?- height(500,building(300,E),Building).
 Building = building(500,E).
 ```
 
