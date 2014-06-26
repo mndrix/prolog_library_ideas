@@ -75,6 +75,13 @@ Building = building(500, E).
 Mountain = mountain(N,india).
 ```
 
+There's also `Property/3` which is a shortcut for `Property/4` where the "old" value is ignored.
+
+```prolog
+?- height(building(300,E),500,Building).
+Building = building(500,E).
+```
+
 ## Polymorphism
 
 Using the same predicate for each property of the same name allows one to have predicates that work across structs:
