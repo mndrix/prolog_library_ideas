@@ -219,3 +219,45 @@ Each struct is identified by a unique name.  We don't allow structs with the sam
 library(record) creates terms and predicates that are visible only within a specific module.  The arrangement described above assumes that structs are globally visible.  Is global visibility really what we want?  I can see benefits of creating both public and private structs.  Implementing private structs, given the UI and behavior I want, seems quite complicated.  I'm also not sure if I want the verbosity of having users choose visibility when they declare the struct.  That path leads to Java's "public static void ..." keyword soup.
 
 I need to think about this some more.  In general, local declarations are much better than global ones.
+
+## Facts
+
+Imagine a struct that defines a family:
+
+```prolog
+:- struct family(father, mother, children:list).
+```
+
+One may also want to assert some known families.
+
+```prolog
+% The Flintstones and Rubbles
+family(fred, wilma, [pebbles]).
+family(barney, betty, [bamm_bamm]).
+
+% The Jetsons
+family(george, jane, [judy,elroy]).
+```
+
+Those facts now depend on the order of fields in the struct.  It also makes it hard to add new fields (like surname) because all facts must be adjusted using the proper arity.
+
+What if we used `term_expansion/2` to convert dict facts into proper facts.  Like this:
+
+```prolog
+% The Flintstones and Rubbles
+family{father: fred, mother: wilma, children: [pebbles]}.
+family{father: barney, mother: betty, children: [bamm_bamm]}.
+
+% The Jetsons
+family{father: george, mother: jane, children: [judy,elroy]}.
+```
+
+Each fact becomes more verbose (as named fields are inclined to be), but the developer no longer has to remember which field belongs to which position.  He is also free to add extra fields to the struct without running into arity problems (since a macro takes care of that).
+
+This design allows one to invoke structs, as if they were goals, to query structs in the database.  For example, which families have George as the father?
+
+```prolog
+?- struct(Family, family, [father=george]),
+   call(Family).
+Family = family(george,jane,[judy,elroy]).
+```
