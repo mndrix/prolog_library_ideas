@@ -131,6 +131,25 @@ Thing = particle(_).
 
 I need to think about this some more.  Although, perhaps in the real world it's so rare for a field to have the same name and different types and be involved in the same program that it's not worth special treatment.  It's easy enough to follow `flavor/2` with a type check, that that probably suffices.
 
+## Metadata
+
+I want to be able to associate arbitary metadata with each struct and each field of a struct.  For a struct, I might want to specify which module contains facts about that entity or which table in a database contains its rows.  For a struct's fields, I might want to specify which columns in a database or which JSON properties correspond with them.
+
+Here's one possible syntax:
+
+```prolog
+:- struct person(
+    name : string ? [json('Name'), sql(given_name)],
+    age  : nonneg ? [json('Age')],
+    [sql(people)]
+).
+```
+
+Based on this metadata, libraries can perform many useful tasks on behalf of their users.  By keeping the metadata close to the type definition, everything about a type is found in one place.
+
+The Go community has used a similar metadata construct to great effect.
+
+
 ## Argument Order
 
 In the example above, I used an argument order for `Property/2` and `Property/4` predicates that's based on a naive reading of [Coding guidelines for Prolog](http://www.ai.uga.edu/mc/plcoding.pdf).  Specifically, §5.2 recommends, "inputs before outputs".  The words "inputs" and "outputs" make sense for unidirectional predicates, but lose meaning for purely relational predicates which operate in multiple modes.  For example, `height/2` works as `height(+,-)` and `height(-,+)`.  Whis argument is the input and output?
