@@ -97,7 +97,7 @@ true.
 
 ## Default Values
 
-I like the way that `library(record)` allows, but doesn't require, default values.  When a value is not supplied and not defaulted, it's left as a variable.  This matches well with Prolog's notion that variables represent values which aren't known yet.  It may be tempting to be more strict here (require Go-style "zero values" or mandate a default for each field, but I think that not the Prolog way).
+I like the way that `library(record)` allows, but doesn't require, default values.  When a value is not supplied and not defaulted, it's left as a variable.  This matches well with Prolog's notion that variables represent values which aren't known yet.  It may be tempting to be more strict here (require Go-style "zero values" or mandate a default for each field, but I think that's not the Prolog way).
 
 ## Auto loading
 
