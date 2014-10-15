@@ -1,6 +1,6 @@
 # Associative Arrays (Maps)
 
-`library(assoc)` is a good implementation, but I don't like the interface and it's too rigidly tied to a specific implementation.  Prolog has no native way to represent maps.  Some programs use associative lists (`[a-1, b-2, …]`).  Others use something like `library(assoc)` provided by their implementation.  Changing approaches requires substantial modifications to one’s code.
+`library(assoc)` and `library(rbtrees)` are a good implementations, but I don't like the interface and they're too rigidly tied to a specific implementation.  Prolog has no native way to represent maps.  Some programs use associative lists (`[a-1, b-2, …]`).  Others use something like `library(assoc)` provided by their implementation.  Changing approaches requires substantial modifications to one’s code.
 
 I want a generic map interface and several implementations.  Changing a goal (at map creation) is all that’s needed to switch implementations.  In my fantasy world, asking for a generic map statically analyzes how the map is used and chooses an implementation that works well in those conditions.
 
