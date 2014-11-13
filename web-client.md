@@ -31,3 +31,9 @@ Now that I’ve figured out how to use `http_open/3`, I could probably start wit
 ## Gumbo Bindings
 
 A high-level browser module needs a good, low-level HTML parsing module beneath it. Use [Gumbo](https://github.com/google/gumbo-parser) as the underlying implementation.  Gumbo is Google’s pure-C HTML5 parsing library with no external dependencies.  It passes HTML5 test suites and has been tested on 2.5 billion web pages from Google’s index.
+
+## Header vs Body
+
+HTTP responses have a relatively short header followed by a (possibly) large body.  When processing an HTTP response, the header should be available immediately.  The body should be made available as it streams from the remote server.  Conceptually, the body is a lazy stream of bytes.
+
+For example, I might ask to download a large, often-changing file.  If the response's `ETag` header is the same as my last request, I'll want to abandon the body and disconnect from the server as soon as possible.
