@@ -18,9 +18,14 @@ Calling `get/2` is like `get/3` with an implicit, throw-away client.
 
 ## SSL Certificates
 
-I routinely encounter websites with valid SSL certificates which have failed to correctly install their intermediate certificates.  SWI Prolog's SSL library also has a hard time finding the system's SSL certs in certain circumstances.  In a couple applications, I've started creating my own SSL certificate bundle that starts with Mozilla's bundle and adds in a bunch of valid, intermediate certificates from popular providers.  This reduces the number of invalid certificate errors.  Perhaps an HTTP client library could use a bundle like this as the default.
+When using `http_open/3`, I routinely encounter SSL certificate verification errors.  The web client's defaults should closely match a real world browser.  Start by looking for one of these certificate files:
 
-Users can still opt for using the system certificates or supplying their own certificates, if they want.  A good start is the list of certificates from Mozilla as [curated by cURL](http://curl.haxx.se/docs/caextract.html)
+  * /etc/ssl/certs/ca-certificates.crt
+  * /etc/pki/tls/certs/ca-bundle.crt
+  * /etc/ssl/ca-bundle.pem
+  * /usr/local/etc/openssl/cert.pem
+
+If a certificate bundle can't be found at those locations, use the list of certificates from Mozilla as [curated by cURL](http://curl.haxx.se/docs/caextract.html).
 
 ## cURL Bindings
 
