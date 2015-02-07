@@ -43,7 +43,7 @@ Each example can be executed as a goal.  If it succeeds, consider it a passing t
 
 ## Simplistic Type Inference
 
-The predicate arguments shown in the examples allow us to perform primitive type inference.  In the examples above, the first argument has values `[]`, `[a,b]`, `[_]` and `[1,2,3].  By executing code like this, we can infer possible types:
+The predicate arguments shown in the examples allow us to perform primitive type inference.  In the examples above, the first argument has values `[]`, `[a,b]`, `[_]` and `[1,2,3]`.  By executing code like this, we can infer possible types:
 
 ```prolog
 ?- dif(T,impossible),
@@ -116,4 +116,4 @@ If one of these modes is incorrect, the user can provide an example or counter e
 
 ## Steadfastness Tests
 
-TODO
+["Steadfastness basically means that you cannot force a predicate down the wrong path by filling in output arguments wrongly"](http://permalink.gmane.com/gmane.comp.lang.ai.prolog.swi/9785).  Based on the inferred modes, fill in some output arguments "wrongly" (by giving them a `nonvar` value) and make sure the example still works.
