@@ -35,11 +35,11 @@ We might declare examples like this:
 
 ## Documentation
 
-By displaying the examples in HTML documentation, users get a good idea how the predicate should be used.  A few accurate, well chosen examples is often more effective at communicating a predicate's purpose than paragraphs of natural language description.  Programmers are pretty good at exptrapolating a mental model based on a few examples.
+By displaying the examples in HTML documentation, users get a good idea how the predicate should be used.  A few accurate, well chosen examples are often more effective at communicating a predicate's purpose than paragraphs of natural language text.  Programmers are pretty good at exptrapolating a few examples into a mental model.
 
 ## Automated Tests
 
-Each example can be executed as a goal.  If it succeeds, consider it a passing test.  Counter examples, when executed as goals, should fail.  This gives us assurance that the documentation we provide to the user accurately reflects the predicates behavior.
+Each example can be executed as a goal.  If it succeeds, consider it a passing test.  Counter examples, when executed as goals, should fail.  This gives us assurance that our example-based documentation never deviates from the predicate's true behavior.
 
 ## Simplistic Type Inference
 
@@ -47,10 +47,9 @@ The predicate arguments shown in the examples allow us to perform primitive type
 
 ```prolog
 ?- dif(T,impossible),
-   error:has_type(T,[]),
-   error:has_type(T,[a,b]),
-   error:has_type(T,[_]),
-   error:has_type(T,[1,2,3]).
+   foreach( member(V,[[],[_],[a,b],[1,2,3]])
+          , error:has_type(T,V)
+          ).
 T = any ;
 T = acyclic ;
 T = nonvar ;
@@ -59,7 +58,7 @@ T = list ;
 T = list_or_partial_list ...
 ```
 
-We can choose among the types using various heuristics.  Alternatively, the most precise type among the options is `proper_list`.  We can calculate "most precise" with something roughly like this:
+We can choose among the possible types with various heuristics.  Alternatively, the most precise type among the options is `proper_list`.  We can calculate "most precise" with something roughly like this:
 
 ```prolog
 more_precise_than(T1, T2) :-
@@ -73,7 +72,47 @@ more_precise_than(T1, T2) :-
 
 ## Simplistic Mode Inference
 
-TODO
+A predicate's modes communicate three related details about argument instantiation and a predicate's solutions:
+
+  * which arguments must start as `nonvar`
+  * which initially `var` arguments will finish as `nonvar`
+  * how many solutions are likely
+
+By executing each example in every possible combination of var/nonvar arguments, we get a table like this:
+
+```
+length([],0)  1 step, 0 extra : ++ is det
+length(_,_)   1 step, n extra : -- is multi
+length([],_)  1 step, 0 extra : +- is det
+length(_,0)   1 step, 0 extra : -+ is det.
+
+length([a,b],2)  1 step, 0 extra : ++ is det
+length(_,_)      3 step, n extra : -- is multi
+length([a,b],_)  1 step, 0 extra : +- is det
+length(_,2)      1 step, 0 extra : -+ is det.
+
+length([_],1)  1 step, 0 extra : ++ is det
+length(_,_)    2 step, n extra : -- is multi
+length([_],_)  1 step, 0 extra : +- is det
+length(_,1)    1 step, 0 extra : -+ is det.
+
+% counter example
+length([1,2,3],7)  1 step, 0 extra : ++ is semidet
+length(_,_)        7 step, n extra : -- is multi
+length([1,2,3],_)  1 step, 0 extra : +- is det
+length(_,7)        1 step, 0 extra : -+ is det.
+```
+
+For a predicate of arity N, there are 2^N possible modes.  Each mode for which all examples and counterexamples behave as expected is a legitimate mode for this predicate.  For each mode, choose the determinism with the most solutions.  For length/2, that leads to the following inferred modes:
+
+```prolog
+length(+,+) is semidet.
+length(+,-) is det.
+length(-,+) is det.
+length(-,-) is multi.
+```
+
+If one of these modes is incorrect, the user can provide an example or counter example to show the discrepancy.  The inference algorithm can then come to the right conclusion.
 
 ## Steadfastness Tests
 
