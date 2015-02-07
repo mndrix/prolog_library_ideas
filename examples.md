@@ -70,6 +70,16 @@ more_precise_than(T1, T2) :-
     asserta(more_precise_than(T1,T2) :- !).
 ```
 
+### type_value/2
+
+The predicates `error:has_type/2` and `quickcheck:arbitrary/2` suggest a more general relation: `type_value/2`.  It would have the following modes:
+
+```prolog
+type_value(+Type,+Value) is semidet.
+type_value(+Type,-Value) is det.  % at random
+type_value(-Type,+Value) is multi.
+```
+
 ## Simplistic Mode Inference
 
 A predicate's modes communicate three related details about argument instantiation and a predicate's solutions:
