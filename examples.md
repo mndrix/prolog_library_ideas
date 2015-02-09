@@ -70,7 +70,7 @@ more_precise_than(T1, T2) :-
     asserta(more_precise_than(T1,T2) :- !).
 ```
 
-`more_precise_than/2` gives us a partial order.  By using a [topological sort](http://en.wikipedia.org/wiki/Topological_sorting) we can pick some types as the most precise.
+`more_precise_than/2` gives us a partial order.  By using a [topological sort](http://en.wikipedia.org/wiki/Topological_sorting) we can pick some types as the most precise.  A [handy video demo](http://www.showme.com/sh/?h=qovixPc).
 
 ### type_value/2
 
