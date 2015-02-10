@@ -46,3 +46,7 @@ A high-level browser module needs a good, low-level HTML parsing module beneath 
 HTTP responses have a relatively short header followed by a (possibly) large body.  When processing an HTTP response, the header should be available immediately.  The body should be made available as it streams from the remote server.  Conceptually, the body is a lazy stream of bytes.
 
 For example, I might ask to download a large, often-changing file.  If the response's `ETag` header is the same as my last request, I'll want to abandon the body and disconnect from the server as soon as possible.
+
+## HTTP/2
+
+HTTP version 2.0 is close to being released.  Make sure the web client library is designed in such a way that it can easily support the concepts present in HTTP/2.  It doesn't have to support the protocol itself just yet.
