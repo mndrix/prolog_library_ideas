@@ -16,6 +16,8 @@ The browser object should be able to handle HTTP caching based on HTTP headers. 
 
 Calling `get/2` is like `get/3` with an implicit, throw-away client.
 
+Steal features from other web libraries: [wreq (Haskell)](http://www.serpentine.com/wreq/)
+
 ## SSL Certificates
 
 When using `http_open/3`, I routinely encounter SSL certificate verification errors.  The web client's defaults should closely match a real world browser.  Start by looking for one of these certificate files:
