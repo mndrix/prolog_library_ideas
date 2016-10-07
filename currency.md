@@ -1,6 +1,6 @@
 # Currency
 
-Make `library(currency)` (from PriceCharting) available as open source.  Teach it how to support different currencies based on their symbol (leading or trailing), separator (comma or full stop), and the number of decimals (Dollars, Yen and Bitcoin differ).  Perhaps these currency details should be configured via a hook.  So you'd end up with something like this:
+Make [library(currency)](https://gist.github.com/mndrix/2224422adc4913e715809245a6b02b3a) (from PriceCharting) available as open source.  Teach it how to support different currencies based on their symbol (leading or trailing), separator (comma or full stop), and the number of decimals (Dollars, Yen and Bitcoin differ).  Perhaps these currency details should be configured via a hook.  So you'd end up with something like this:
 
 ```prolog
 % define(Iso4217, Symbol, SymbolPosition, Thousands, Fraction, FractionSize)
