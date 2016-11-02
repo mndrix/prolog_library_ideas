@@ -8,6 +8,8 @@ I want a generic, consistent interface to string data.  The library should provi
 
 Start by implementing the interface for these representations. Then implement it for other text data structures.
 
+Or maybe I just standardize on SWI-Prolog's built in string type and build everything else around that.  In that case, this library becomes a massive collection of useful string predicates.
+
 ## Predicates
 
 The library should have the following predicates (and many more):  
@@ -17,6 +19,8 @@ The library should have the following predicates (and many more):
   * `text_codes(Text:text,Codes:list(nonneg))`
   * `text_string(Text:text,String:string)`
   * `text_length(+Text:text, -Length:nonneg)`
+  * see [Haskell's Data.Text](http://hackage.haskell.org/package/text-1.2.2.1/docs/Data-Text.html) for ideas
+  * see [Go's strings](https://golang.org/pkg/strings/) for predicate ideas
   * ...
   
   
